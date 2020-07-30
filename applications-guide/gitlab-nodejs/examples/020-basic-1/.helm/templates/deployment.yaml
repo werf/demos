@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Chart.Name }}
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $.Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Chart.Name }}
+    spec:
+      imagePullSecrets:
+      - name: "registrysecret"
+      containers:
+      - name: web-basic
+{{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
+        workingDir: /app
+        command: ["node","/app/app.js"]
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        env:
+        - name: DEBUG
+        value: {{ pluck .Values.global.env .Values.app.isDebug | first | default .Values.app.isDebug._default }}
+{{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
