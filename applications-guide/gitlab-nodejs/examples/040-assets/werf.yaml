@@ -12,20 +12,22 @@ shell:
   setup:
   - cd /app && npm run build
 git:
-  - add: /
-    to: /app
-    stageDependencies:
-      install:
-      - package.json
-      - webpack-*
-      setup:
-      - "**/*"
+- add: /
+  to: /app
+  stageDependencies:
+    install:
+    - package.json
+    - webpack-*
+    setup:
+    - "**/*"
 mount:
 - from: build_dir
   to: /var/cache/apt
 ---
-image: assets
-from: nginx:alpine
+image: node_assets
+from: nginx:stable-alpine
+docker:
+  EXPOSE: '80'
 ansible:
   beforeInstall:
   - name: Add nginx config
@@ -38,14 +40,11 @@ import:
   add: /app/dist
   to: /www
   after: setup
-
 ---
 image: basicapp
 from: node:14-stretch
 docker:
   WORKDIR: /app
-  CMD: ['node', '/app/dist/app.js']
-  EXPOSE: '5000'
 git:
 - add: /src
   to: /app/src

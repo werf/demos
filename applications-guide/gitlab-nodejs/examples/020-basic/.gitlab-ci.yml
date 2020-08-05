@@ -10,7 +10,7 @@ before_script:
 .base_deploy: &base_deploy
   stage: deploy
   script:
-    - werf deploy --set "global.ci_url=mydomain.io"
+    - werf deploy
   dependencies:
     - Build
   tags:

@@ -6,7 +6,7 @@ const sendEmail = async (email) => {
     const mg = mailgun({apiKey: process.env.MAILGUN_APIKEY, domain: process.env.MAILGUN_DOMAIN, host: "api.eu.mailgun.net"});
     if (email != null) {
       email.from = "Mailgun Sandbox <postmaster@" + process.env.MAILGUN_DOMAIN + ">"
-      email.subject = "Welcome to Krovatka!"
+      email.subject = "Welcome to Chat!"
       email.html = "<p>" + email.text + "</p>"
       console.log("Email: " + JSON.stringify(email));
     }

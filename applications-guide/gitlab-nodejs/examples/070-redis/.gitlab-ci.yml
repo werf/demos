@@ -31,7 +31,7 @@ Deploy to staging:
     name: staging
     url: http://staging.mydomain.io
   only:
-    - 070-redis
+    - merge_requests
   when: manual
 
 Deploy to production:

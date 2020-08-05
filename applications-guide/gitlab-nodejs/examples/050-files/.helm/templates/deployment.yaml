@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
   replicas: 1
-  selector:
-    matchLabels:
-      app: {{ $.Chart.Name }}
   template:
     metadata:
       labels:
@@ -19,10 +19,10 @@ spec:
       imagePullSecrets:
       - name: "registrysecret"
       containers:
-      - name: web-basic
+      - name: basicapp
+        command: ["node","/app/dist/app.js"]
 {{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
-        command: ["node","/app/dist/app.js"]
         ports:
         - containerPort: 3000
           protocol: TCP
@@ -42,8 +42,8 @@ spec:
         - name: S3_BUCKET
           value: {{ pluck .Values.global.env .Values.app.s3.bucket | first | default .Values.app.s3.bucket._default }}
 {{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
-      - name: assets
-{{ tuple "assets" . | include "werf_container_image" | indent 8 }}
+      - name: node_assets
+{{ tuple "node_assets" . | include "werf_container_image" | indent 8 }}
         lifecycle:
           preStop:
             exec:
