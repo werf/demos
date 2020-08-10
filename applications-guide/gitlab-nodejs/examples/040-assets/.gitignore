@@ -8,3 +8,7 @@ node/node_modules/*
 .helm/charts/
 node/dist/*
 dist/*
+node_modules
+node_modules/*
+dist
+dist/*
