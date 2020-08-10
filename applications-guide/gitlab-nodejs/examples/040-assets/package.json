@@ -1,15 +1,14 @@
 {
   "name": "30-assets",
   "version": "1.0.0",
-  "main": "app.js",
   "description": "Hello world app on NodeJs Express!",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf dist && webpack --config webpack.config.js --mode development",
     "dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --open"
   },
-  "keywords": [],
   "author": "Flant",
   "license": "ISC",
   "dependencies": {

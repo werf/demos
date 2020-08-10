@@ -24,7 +24,7 @@ mount:
 - from: build_dir
   to: /var/cache/apt
 ---
-image: node_assets
+image: "node-assets"
 from: nginx:stable-alpine
 docker:
   EXPOSE: '80'
@@ -56,12 +56,16 @@ import:
   to: /app/node_modules
   after: setup
 - artifact: assets-built
-  add: /app/dist/views
-  to: /app/dist/views
+  add: /app/dist/main.js
+  to: /app/dist/main.js
   after: setup
 - artifact: assets-built
-  add: /app/dist/app.js
-  to: /app/dist/app.js
+  add: /app/dist/index.html
+  to: /app/dist/index.html
+  after: setup
+- artifact: assets-built
+  add: /app/dist/config/env.json
+  to: /app/dist/config/env.json
   after: setup
 - artifact: assets-built
   add: /app/package.json
@@ -70,4 +74,8 @@ import:
 - artifact: assets-built
   add: /app/package-lock.json
   to: /app/package-lock.json
+  after: setup
+- artifact: assets-built
+  add: /app/app.js
+  to: /app/app.js
   after: setup

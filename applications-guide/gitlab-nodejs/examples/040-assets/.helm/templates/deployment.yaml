@@ -20,7 +20,7 @@ spec:
       - name: "registrysecret"
       containers:
       - name: basicapp
-        command: ["node","/app/dist/app.js"]
+        command: ["node","/app/app.js"]
 {{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
         ports:
@@ -28,10 +28,10 @@ spec:
           protocol: TCP
         env:
         - name: DEBUG
-        value: {{ pluck .Values.global.env .Values.app.isDebug | first | default .Values.app.isDebug._default }}
+          value: "{{ pluck .Values.global.env .Values.app.isDebug | first | default .Values.app.isDebug._default }}"
 {{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
-      - name: node_assets
-{{ tuple "node_assets" . | include "werf_container_image" | indent 8 }}
+      - name: node-assets
+{{ tuple "node-assets" . | include "werf_container_image" | indent 8 }}
         lifecycle:
           preStop:
             exec:
