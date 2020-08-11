@@ -5,24 +5,24 @@ artifact: assets-built
 from: node:14-stretch
 shell:
   beforeInstall:
-  - apt update
-  - apt install -y build-essential tzdata locales
+    - apt update
+    - apt install -y build-essential tzdata locales
   install:
-  - cd /app && npm i
+    - cd /app && npm i
   setup:
-  - cd /app && npm run build
+    - cd /app && npm run build
 git:
-- add: /
-  to: /app
-  stageDependencies:
-    install:
-    - package.json
-    - webpack-*
-    setup:
-    - "**/*"
+  - add: /
+    to: /app
+    stageDependencies:
+      install:
+        - package.json
+        - webpack-*
+      setup:
+        - "**/*"
 mount:
-- from: build_dir
-  to: /var/cache/apt
+  - from: build_dir
+    to: /var/cache/apt
 ---
 image: "node-assets"
 from: nginx:stable-alpine
@@ -30,26 +30,29 @@ docker:
   EXPOSE: '80'
 shell:
   beforeInstall:
-  - TODO тут как-то надо скопировать .werf/nginx.conf" в /etc/nginx/nginx.conf
+  - |
+    head -c -1 <<'EOF' > /etc/nginx/nginx.conf
+    {{ .Files.Get ".werf/nginx.conf" | nindent 4 }}
+    EOF
 import:
-- artifact: assets-built
-  add: /app/dist
-  to: /www
-  after: setup
+  - artifact: assets-built
+    add: /app/dist
+    to: /www
+    after: setup
 ---
 image: basicapp
 from: node:14-stretch
 git:
-- add: /
-  to: /app
-  stageDependencies:
-    install:
-    - package.json
+  - add: /
+    to: /app
+    stageDependencies:
+      install:
+        - package.json
 shell:
   beforeInstall:
-  - apt update
-  - apt install -y tzdata locales
+    - apt update
+    - apt install -y tzdata locales
   install:
-  - cd /app && npm ci
+    - cd /app && npm ci
 docker:
   WORKDIR: /app
