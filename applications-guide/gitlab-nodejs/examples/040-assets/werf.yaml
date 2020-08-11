@@ -28,13 +28,9 @@ image: "node-assets"
 from: nginx:stable-alpine
 docker:
   EXPOSE: '80'
-ansible:
+shell:
   beforeInstall:
-  - name: Add nginx config
-    copy:
-      content: |
-{{ .Files.Get ".werf/nginx.conf" | indent 8 }}
-      dest: /etc/nginx/nginx.conf
+  - TODO тут как-то надо скопировать .werf/nginx.conf" в /etc/nginx/nginx.conf
 import:
 - artifact: assets-built
   add: /app/dist
@@ -43,39 +39,17 @@ import:
 ---
 image: basicapp
 from: node:14-stretch
+git:
+- add: /
+  to: /app
+  stageDependencies:
+    install:
+    - package.json
+shell:
+  beforeInstall:
+  - apt update
+  - apt install -y tzdata locales
+  install:
+  - cd /app && npm ci
 docker:
   WORKDIR: /app
-git:
-- add: /src
-  to: /app/src
-- add: /.gitignore
-  to: /app/.gitignore
-import:
-- artifact: assets-built
-  add: /app/node_modules
-  to: /app/node_modules
-  after: setup
-- artifact: assets-built
-  add: /app/dist/main.js
-  to: /app/dist/main.js
-  after: setup
-- artifact: assets-built
-  add: /app/dist/index.html
-  to: /app/dist/index.html
-  after: setup
-- artifact: assets-built
-  add: /app/dist/config/env.json
-  to: /app/dist/config/env.json
-  after: setup
-- artifact: assets-built
-  add: /app/package.json
-  to: /app/package.json
-  after: setup
-- artifact: assets-built
-  add: /app/package-lock.json
-  to: /app/package-lock.json
-  after: setup
-- artifact: assets-built
-  add: /app/app.js
-  to: /app/app.js
-  after: setup

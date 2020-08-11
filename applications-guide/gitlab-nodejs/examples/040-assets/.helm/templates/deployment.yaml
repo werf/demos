@@ -27,7 +27,7 @@ spec:
         - containerPort: 3000
           protocol: TCP
         env:
-        - name: DEBUG
+        - name: "DEBUG"
           value: "{{ pluck .Values.global.env .Values.app.isDebug | first | default .Values.app.isDebug._default }}"
 {{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
       - name: node-assets
