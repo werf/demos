@@ -3,51 +3,11 @@ app:
     _default: "true"
     production: "false"
     testing: "true"
-  s3:
-    host:
-      _default: minio
-    port:
-      _default: 9000
-    bucket:
-      _default: 'avatars'
-    ssl:
-      _default: 'false'
-  cdn_prefix:
-    _default: '/'
-  rabbitmq:
-    host:
-      _default: rabbitmq
-    vhost:
-      _default: ""
-    user:
-      _default: chat
-    port:
-      _default: 5672
   redis:
     session_ttl:
-        _default: "3600"
+      _default: "3600"
     cookie_secret:
-        _default: "supersecret"
-
-minio:
-  fullnameOverride: minio
-  nameOverride: minio
-  persistence:
-    enabled: true
-    storageClass: "local-storage"
-    accessMode: ReadWriteOnce
-    size: 2Gi
-
-rabbitmq:
-  fullnameOverride: rabbitmq
-  nameOverride: rabbitmq
-  rabbitmq:
-    username: chat
-  persistence:
-    storageClass: "local-storage"
-    accessMode: ReadWriteOnce
-    size: 4Gi
-
+      _default: "supersecret"
 redis:
   fullnameOverride: redis
   nameOverride: redis

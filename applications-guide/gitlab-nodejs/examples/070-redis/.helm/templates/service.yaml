@@ -10,6 +10,3 @@ spec:
   - name: http
     port: 3000
     protocol: TCP
-  - name: http-assets
-    port: 80
-    protocol: TCP
