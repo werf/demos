@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      - name: basicapp
+{{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
+        command:
+        - java
+        - -jar
+        - /app/app.jar $JAVA_OPT
+        workingDir: /app
+        ports:
+        - name: http-back
+          containerPort: 8080
+          protocol: TCP
+        env:
+{{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
+        - name: JAVA_OPT
+          value: {{ pluck .Values.global.env .Values.app.java_opt | first | default .Values.app.java_opt._default | quote }}
+        - name: S3ENDPOINT
+          value: {{ pluck .Values.global.env .Values.app.s3.epurl | first | default .Values.app.s3.epurl._default | quote }}
+        - name: S3KEY
+          value: {{ pluck .Values.global.env .Values.app.s3.key | first | default .Values.app.s3.key._default | quote }}
+        - name: S3SECRET
+          value: {{ pluck .Values.global.env .Values.app.s3.secret | first | default .Values.app.s3.secret._default | quote }}
+        - name: S3BUCKET
+          value: {{ pluck .Values.global.env .Values.app.s3.bucket | first | default .Values.app.s3.bucket._default | quote }}
