@@ -1,52 +1,37 @@
-variables:
-  WERF_VERSION: "1.1 beta"
-
-.base_deploy: &base_deploy
-  script:
-    - type multiwerf && source <(multiwerf use ${WERF_VERSION})
-    - werf version
-    - type werf && source <(werf ci-env gitlab --tagging-strategy stages-signature --verbose)
-    - set -x
-    - werf helm repo init
-    - werf helm dependency update
-    - werf deploy
-      --timeout=300
-      --stages-storage :local
-      --env ${CI_ENVIRONMENT_CUSTOM_SLUG:-${CI_ENVIRONMENT_SLUG}}
-  dependencies:
-    - Build
-  tags:
-    - article-werf
-
 stages:
   - build
   - test
   - deploy
+  - cleanup
+
+before_script:
+  - type multiwerf && source <(multiwerf use 1.1 stable)
+  - type werf && source <(werf ci-env gitlab --verbose)
+
+.base_deploy: &base_deploy
+  stage: deploy
+  script:
+    - werf deploy --set "global.ci_url=$(cut -d / -f 3 <<< $CI_ENVIRONMENT_URL)"
+  dependencies:
+    - Build
+  tags:
+    - werf
 
 Build:
   stage: build
   script:
-    - type multiwerf && source <(multiwerf use ${WERF_VERSION})
-    - werf version
-    - type werf && source <(werf ci-env gitlab --tagging-strategy stages-signature --verbose)
     - werf build-and-publish
-      --stages-storage :local
-  except:
-    - schedules
   tags:
-    - article-werf
+    - werf
 
 Run Tests:
   stage: test
   script:
-    - type multiwerf && source <(multiwerf use ${WERF_VERSION})
-    - werf version
-    - type werf && source <(werf ci-env gitlab --tagging-strategy stages-signature --verbose)
     - werf run --stages-storage :local node -- npm run pretest
   except:
     - schedules
   tags:
-    - article-werf
+    - werf
   needs: ["Build"]
 
 Test:
@@ -62,26 +47,31 @@ Test:
   when: manual
   needs: ["Build","Run Tests"]
 
-Stage (manual):
+Deploy to staging:
   extends: .base_deploy
-  stage: deploy
   environment:
-    name: stage
-  except:
-    - schedules
+    name: staging
+    url: http://staging.mydomain.io
   only:
-    - master
+    - merge_requests
   when: manual
   needs: ["Build","Run Tests"]
 
-Production (manual):
+Deploy to production:
   extends: .base_deploy
-  stage: deploy
   environment:
     name: production
-  except:
-    - schedules
+    url: http://mydomain.io
   only:
-    - tag
-  when: manual
+    - master
   needs: ["Build","Run Tests"]
+
+Cleanup:
+  stage: cleanup
+  script:
+    - type multiwerf && source <(multiwerf use 1.1 stable)
+    - type werf && source <(werf ci-env gitlab --tagging-strategy tag-or-branch --verbose)
+    - docker login -u nobody -p ${WERF_IMAGES_CLEANUP_PASSWORD} ${WERF_IMAGES_REPO}
+    - werf cleanup --stages-storage :local
+  only:
+    - schedules
