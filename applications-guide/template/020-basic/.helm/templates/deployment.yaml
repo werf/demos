@@ -20,13 +20,13 @@ spec:
       - name: "registrysecret"
       containers:
       - name: basicapp
-        command: ["node","/app/app.js"]
+        command: [__________]
 {{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
         ports:
-        - containerPort: 3000
+        - containerPort: __________
           protocol: TCP
         env:
-        - name: DEBUG
-          value: {{ pluck .Values.global.env .Values.app.isDebug | first | default .Values.app.isDebug._default }}
+          __________
+          __________
 {{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
