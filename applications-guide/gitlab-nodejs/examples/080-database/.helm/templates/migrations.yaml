@@ -1,4 +1,3 @@
-{{- $vars := include "app_vars" . | fromYaml }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -20,11 +19,11 @@ spec:
         command: ['/bin/sh', '-c', 'while ! getent ahostsv4 {{ pluck .Values.global.env .Values.app.postgresql.host | first | default .Values.app.postgresql.host._default }}; do sleep 1; done']
       containers:
       - name: init-tables
-{{ tuple "node" . | include "werf_container_image" | indent 8 }}
+{{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
         command: ['node']
         args: ['node_modules/node-pg-migrate/bin/node-pg-migrate', 'up']
         workingDir: /app
         env:
         - name: DATABASE_URL
-          value: {{ $vars.db_uri | quote }}
-{{ tuple "node" . | include "werf_container_env" | indent 8 }}
+          value: "postgres://{{ pluck .Values.global.env .Values.app.postgresql.login | first | default .Values.app.postgresql.login._default }}:{{ pluck .Values.global.env .Values.app.postgresql.password | first | default .Values.app.postgresql.password._default }}@{{ pluck .Values.global.env .Values.app.postgresql.host | first | default .Values.app.postgresql.host._default }}:{{ pluck .Values.global.env .Values.app.postgresql.port | first | default .Values.app.postgresql.port._default }}/{{ pluck .Values.global.env .Values.app.postgresql.db | first | default .Values.app.postgresql.db._default }}"
+{{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}

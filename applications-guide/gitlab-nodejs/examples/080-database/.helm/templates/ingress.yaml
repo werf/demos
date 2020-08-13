@@ -13,9 +13,4 @@ spec:
       - path: /
         backend:
           serviceName: {{ .Chart.Name }}
-          servicePort: 80
-      - backend:
-          serviceName: {{ pluck .Values.global.env .Values.app.s3.host  | first | default .Values.app.s3.host._default }}
-          servicePort: {{ pluck .Values.global.env .Values.app.s3.port  | first | default .Values.app.s3.port._default }}
-        path: /{{ pluck .Values.global.env .Values.app.s3.bucket  | first | default .Values.app.s3.bucket._default }}/
-
+          servicePort: 3000

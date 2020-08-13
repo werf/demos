@@ -3,81 +3,20 @@ app:
     _default: "true"
     production: "false"
     testing: "true"
-  s3:
-    host:
-      _default: minio
-    port:
-      _default: 9000
-    bucket:
-      _default: 'avatars'
-    ssl:
-      _default: 'false'
-  cdn_prefix:
-    _default: '/'
-  rabbitmq:
-    host:
-      _default: rabbitmq
-    vhost:
-      _default: ""
-    user:
-      _default: chat
-    port:
-      _default: 5672
-  redis:
-    session_ttl:
-        _default: "3600"
-    cookie_secret:
-        _default: "supersecret"
   postgresql:
+    login:
+      _default: guide-username
     host:
       _default: postgresql
-    user:
-      _default: chat
-    db:
-      _default: chat
     port:
       _default: 5432
-
-# Values that's applying to charts
-minio:
-  fullnameOverride: minio
-  nameOverride: minio
-  persistence:
-    enabled: true
-    storageClass: "local-storage"
-    accessMode: ReadWriteOnce
-    size: 2Gi
-
-rabbitmq:
-  fullnameOverride: rabbitmq
-  nameOverride: rabbitmq
-  rabbitmq:
-    username: chat
-  persistence:
-    storageClass: "local-storage"
-    accessMode: ReadWriteOnce
-    size: 4Gi
-
-redis:
-  fullnameOverride: redis
-  nameOverride: redis
-  _port:
-    _default: 6379
-  host:
-    _default: redis-master
-  master:
-    persistence:
-      enabled: false
-  slave:
-    persistence:
-      enabled: false
-  cluster:
-    slaveCount: 1
+    db:
+      _default: guided-database
 
 postgresql:
   postgresqlDatabase: guided-database
   postgresqlUsername: guide-username
-  postgresqlHost: postgres
+  postgresqlHost: postgresql
   port: 5432
   login: guide-username
   imageTag: "12"
