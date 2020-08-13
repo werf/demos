@@ -17,8 +17,6 @@ postgresql:
   postgresqlDatabase: guided-database
   postgresqlUsername: guide-username
   postgresqlHost: postgresql
-  port: 5432
-  login: guide-username
   imageTag: "12"
   fullnameOverride: postgresql
   nameOverride: postgresql
