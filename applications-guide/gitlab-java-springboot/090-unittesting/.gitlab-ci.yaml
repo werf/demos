@@ -3,8 +3,16 @@ variables:
   WERF_STAGES_STORAGE: ":local"
 
 stages:
+  - test
   - build
   - deploy
+
+test:
+  script:
+    - docker run --rm -v "$(pwd):/app" -w /app maven:3-jdk-8 mvn checkstyle:checkstyle
+  stage: test
+  tags:
+    - werf
 
 Build:
   stage: build

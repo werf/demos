@@ -1,19 +1,26 @@
 redis:
+  fullnameOverride: guided-redis
+  nameOverride: guided-redis
   enabled: true
+  _login:
+     _default: guided-redis
+  _port:
+     _default: 6379
+  host:
+    _default: guided-redis-maste
 
 app:
+  redis:
+    session_ttl:
+        _default: "3600"
+    cookie_secret:
+        _default: "supersecret"
   java_opt:
     _default: "--debug"
     production: ""
   url:
     _default: stage.example.com
     prodiction: example.com
-
-redis:
-  host:
-    _default: example-2-stage-redis-master
-  port:
-    _default: 6379
 
 mysql:
   host:
