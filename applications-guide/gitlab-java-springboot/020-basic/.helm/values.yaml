@@ -1,0 +1,7 @@
+app:
+  java_opt:
+    _default: "--debug"
+    production: ""
+  url:
+    _default: mydomain.io 
+    production: prod.mydomain.io
