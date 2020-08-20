@@ -20,10 +20,8 @@ spec:
       - name: "registrysecret"
       containers:
       - name: basicapp
-        command:
-        - java
-        - -jar
-        - /app/target/demo-1.0.jar $JAVA_OPT
+        command: ["/bin/bash"]
+        args: ["-c", "java -jar /app/target/demo-1.0.jar $JAVA_OPT"]
 {{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
         ports:
