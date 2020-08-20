@@ -19,7 +19,7 @@ spec:
       imagePullSecrets:
       - name: "registrysecret"
       containers:
-      - name: {{ $.Chart.Name }}
+      - name: {{ .Chart.Name }}
 {{ tuple "node_assets" . | include "werf_container_image" | indent 8 }}
         ports:
         - containerPort: 80
