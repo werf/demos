@@ -2,15 +2,19 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
+  name: {{ .Chart.Name | quote }}
   annotations:
     kubernetes.io/ingress.class: nginx
-  name: {{ .Chart.Name }}
 spec:
   rules:
-  - host: {{ .Values.global.ci_url }}
+  - host: {{ pluck .Values.global.env .Values.app.url | first | default .Values.app.url._default }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ .Chart.Name }}
+          serviceName: {{ .Chart.Name | quote }}
+          servicePort: 8080
+      - path: /assets
+        backend:
+          serviceName: {{ .Chart.Name | quote }}
           servicePort: 80

@@ -4,20 +4,15 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
-  revisionHistoryLimit: 3
-  strategy:
-    type: RollingUpdate
-  replicas: 1
   template:
     metadata:
       labels:
         app: {{ .Chart.Name }}
     spec:
-      imagePullSecrets:
-      - name: "registrysecret"
       containers:
       - name: basicapp
         command:
@@ -25,13 +20,13 @@ spec:
         - -jar
         - /app/target/demo-1.0.jar $JAVA_OPT
 {{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
-        workingDir: /app
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 8080
           protocol: TCP
         env:
         - name: JAVA_OPT
           value: {{ pluck .Values.global.env .Values.app.java_opt | first | default .Values.app.java_opt._default }}
         - name: DBPASS
-          value: "just_a_placeholder"
+          value: "mysuperdbpassword"
 {{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}

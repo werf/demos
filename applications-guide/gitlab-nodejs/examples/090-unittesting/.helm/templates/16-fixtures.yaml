@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Chart.Name }}-fixtures
+  name: {{ $.Chart.Name }}-fixtures
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/weight": "10"
@@ -10,7 +10,7 @@ spec:
   activeDeadlineSeconds: 600
   template:
     metadata:
-      name: {{ .Chart.Name }}-fixtures
+      name: {{ $.Chart.Name }}-fixtures
     spec:
       restartPolicy: OnFailure
       initContainers:

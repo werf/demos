@@ -14,11 +14,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ $.Chart.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ $.Chart.Name }}
     spec:
       imagePullSecrets:
       - name: "registrysecret"
@@ -33,7 +33,7 @@ spec:
         image: alpine:3.6
         command: ['/bin/sh', '-c', 'while ! getent ahostsv4 {{ pluck .Values.global.env .Values.app.postgresql.host | first | default .Values.app.postgresql.host._default }}; do sleep 1; done']
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ $.Chart.Name }}
 {{ tuple "node" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
         command: ["node","/app/dist/app.js"]

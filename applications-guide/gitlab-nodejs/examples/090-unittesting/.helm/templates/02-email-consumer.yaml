@@ -11,16 +11,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}-email-consumer
+      app: {{ $.Chart.Name }}-email-consumer
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}-email-consumer
+        app: {{ $.Chart.Name }}-email-consumer
     spec:
       imagePullSecrets:
       - name: "registrysecret"
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ $.Chart.Name }}
 {{ tuple "consumer" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
         command: ["node","consumer.js"]

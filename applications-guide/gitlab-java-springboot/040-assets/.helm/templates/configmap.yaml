@@ -4,7 +4,21 @@ kind: ConfigMap
 metadata:
   name: {{ .Chart.Name }}-configmap
 data:
-  env.json: |
-    {
-      "url": {{ pluck .Values.global.env .Values.app.url | first | default .Values.app.url._default |quote }}
+  default.conf: |
+    server {
+        listen       80;
+        server_name  localhost;
+        location / {
+            root   /app/dist/;
+            index  index.html index.htm;
+        }
+        location /healthz {
+            return 200;
+        }
     }
+
+  env.js: |
+    module.exports = {
+        url: {{ pluck .Values.global.env .Values.app.url | first | default .Values.app.url._default |quote }},
+        environment: {{ .Values.global.env |quote }}
+    };

@@ -7,14 +7,13 @@ git:
 - add: /
   to: /app
   stageDependencies:
-    beforeSetup:
-    - pom.xml
     setup:
+    - pom.xml
     - src
 shell:
   setup:
-  - cd /app
-  - mvn -B -f pom.xml package dependency:resolve
+      - cd /app
+      - mvn -B -f pom.xml package dependency:resolve
 ---
 image: basicapp
 from: openjdk:8-jdk-alpine
