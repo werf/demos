@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ $.Chart.Name }}-migrations
+  name: {{ .Chart.Name }}-migrations
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/weight": "5"
@@ -10,7 +10,7 @@ spec:
   activeDeadlineSeconds: 600
   template:
     metadata:
-      name: {{ $.Chart.Name }}-migrations
+      name: {{ .Chart.Name }}-migrations
     spec:
       restartPolicy: OnFailure
       initContainers:

@@ -19,8 +19,8 @@ shell:
     - cd /app
     - mvn -B -f pom.xml dependency:resolve
   setup:
-    - cd /app
-    - mvn -B -f pom.xml package
+  - cd /app
+  - mvn -B -f pom.xml package
 ---
 image: basicapp
 from: openjdk:8-jdk-alpine

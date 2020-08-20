@@ -12,7 +12,7 @@ git:
     - src
 shell:
   setup:
-      - cd /app
-      - mvn -B -f pom.xml package dependency:resolve
+  - cd /app
+  - mvn -B -f pom.xml package dependency:resolve
 docker:
   WORKDIR: /app
