@@ -20,10 +20,8 @@ spec:
       - name: "registrysecret"
       containers:
       - name: basicapp
-        command:
-        - java
-        - -jar
-        - /app/target/demo-1.0.jar $JAVA_OPT
+        command: ["java"]
+        args: ["-jar", "/app/demo.jar", "$JAVA_OPT"]
 {{ tuple "basicapp" . | include "werf_container_image" | indent 8 }}
         workingDir: /app
         ports:
@@ -31,7 +29,7 @@ spec:
           protocol: TCP
         env:
         - name: JAVA_OPT
-          value: {{ pluck .Values.global.env .Values.app.java_opt | first | default .Values.app.java_opt._default }}
+          value: "{{ pluck .Values.global.env .Values.app.java_opt | first | default .Values.app.java_opt._default }}"
         - name: DBPASS
           value: "just_a_placeholder"
 {{ tuple "basicapp" . | include "werf_container_env" | indent 8 }}
